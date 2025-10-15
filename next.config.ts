@@ -18,8 +18,7 @@ const nextConfig: NextConfig = {
     const externalApiUrlService1 = process.env.EXTERNAL_API_URL_SERVICE1;
     const externalApiUrlService2 = process.env.EXTERNAL_API_URL_SERVICE2;
     const weatherApiUrl = process.env.WEATHER_API_URL;
-    // Removed: pollinationExternalApiUrl from template's base config.
-    // The AI will add specific API rewrites based on user requests.
+    const externalSttApiUrl = process.env.EXTERNAL_STT_API_URL; // New STT API URL
 
     if (externalApiUrlService1) {
       rewrites.push({
@@ -42,12 +41,15 @@ const nextConfig: NextConfig = {
       });
     }
 
-    // Removed: Specific rewrite rule for Pollinations API.
-    // The AI is expected to add this when a user requests it.
+    if (externalSttApiUrl) {
+      rewrites.push({
+        source: '/api/stt/:path*',
+        destination: `${externalSttApiUrl}/:path*`,
+      });
+    }
 
     return rewrites;
   },
 };
 
 export default nextConfig;
-
