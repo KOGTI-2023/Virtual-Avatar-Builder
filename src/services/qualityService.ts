@@ -1,8 +1,8 @@
 // Code and comments in English only
-import { UploadResult, AssetKind } from '@/types/avatar-builder.d';
+import { AssetQuality, AssetKind } from '@/types/avatar-builder';
 
 export class QualityService {
-  async performQualityChecks(assetPath: string, kind: AssetKind): Promise<UploadResult['quality']> {
+  async performQualityChecks(assetPath: string, kind: AssetKind): Promise<AssetQuality> {
     // Mock implementation for quality checks
     // In a real scenario, this would involve:
     // - Image/video processing libraries (e.g., OpenCV, Dlib)

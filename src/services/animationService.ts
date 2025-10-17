@@ -1,5 +1,5 @@
 // Code and comments in English only
-import { RenderRequest } from '@/types/avatar-builder.d';
+import { RenderRequest } from '@/types/avatar-builder';
 
 export class AnimationService {
   async generateAnimationData(request: RenderRequest): Promise<any> {

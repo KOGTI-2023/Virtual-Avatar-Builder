@@ -2,7 +2,7 @@ import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 import path from 'path';
 import fs from 'fs';
-import { DbSchema } from '@/types/avatar-builder.d'; // Import DbSchema from the new types file
+import { DbSchema } from '@/types/avatar-builder'; // Import DbSchema from the new types file
 
 // Define the path for the JSON database file
 const DB_FILE_NAME = 'db.json';
@@ -18,10 +18,13 @@ let dbInstance: Low<DbSchema> | null = null;
  */
 export async function getDb(): Promise<Low<DbSchema>> {
   if (dbInstance) {
-    if (dbInstance.data) {
-      return dbInstance;
+    if (!dbInstance.data) {
+      await dbInstance.read();
+      if (!dbInstance.data) {
+        dbInstance.data = { examples: [], projects: [] };
+        await dbInstance.write();
+      }
     }
-    await dbInstance.read();
     return dbInstance;
   }
 
@@ -37,6 +40,10 @@ export async function getDb(): Promise<Low<DbSchema>> {
     dbInstance = new Low<DbSchema>(adapter, { examples: [], projects: [] });
 
     await dbInstance.read();
+    if (!dbInstance.data) {
+      dbInstance.data = { examples: [], projects: [] };
+      await dbInstance.write();
+    }
 
     console.log(`Database initialized/loaded from: ${DB_FULL_PATH}`);
 

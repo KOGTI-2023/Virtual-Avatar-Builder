@@ -1,17 +1,5 @@
 // Code and comments in English only
-import { StyleSpec } from '@/types/avatar-builder.d';
-
-export interface AvailableStyle {
-  id: StyleSpec['look'];
-  name: string;
-  description: string;
-}
-
-export interface AvailableBackground {
-  id: StyleSpec['background'];
-  name: string;
-  description: string;
-}
+import { StyleSpec, AvailableStyle, AvailableBackground } from '@/types/avatar-builder';
 
 export class StyleService {
   private availableStyles: AvailableStyle[] = [

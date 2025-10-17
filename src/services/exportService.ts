@@ -1,5 +1,5 @@
 // Code and comments in English only
-import { ExportOptions, ExportResult, RenderResult } from '@/types/avatar-builder.d';
+import { ExportOptions, ExportResult, RenderResult } from '@/types/avatar-builder';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -12,16 +12,26 @@ export class ExportService {
 
   async exportRender(renderResult: RenderResult, options: ExportOptions): Promise<ExportResult> {
     const { renderId, previewUrl } = renderResult;
-    const baseFileName = path.basename(previewUrl, '.mp4'); // Assuming previewUrl is an MP4
+    const previewRelativePath = previewUrl.startsWith('/') ? previewUrl.slice(1) : previewUrl;
+    const { name: baseFileName, ext } = path.parse(previewRelativePath);
+    const resolvedPreviewPath = path.join(process.cwd(), 'public', previewRelativePath);
 
-    const videoUrl = `/exports/${baseFileName}.mp4`;
+    if (!ext) {
+      throw new Error(`Unsupported preview URL format for render ${renderId}: ${previewUrl}`);
+    }
+
+    const videoUrl = `/exports/${baseFileName}${ext}`;
     let subtitlesUrl: string | undefined;
     let pngSequenceUrl: string | undefined;
 
     // Simulate copying the video to export directory
-    const sourcePath = path.join(process.cwd(), 'public', previewUrl);
-    const destVideoPath = path.join(EXPORT_OUTPUT_DIR, `${baseFileName}.mp4`);
-    await fs.copyFile(sourcePath, destVideoPath);
+    try {
+      await fs.access(resolvedPreviewPath);
+    } catch (error) {
+      throw new Error(`Render preview not found at ${resolvedPreviewPath}: ${(error as Error).message}`);
+    }
+    const destVideoPath = path.join(EXPORT_OUTPUT_DIR, `${baseFileName}${ext}`);
+    await fs.copyFile(resolvedPreviewPath, destVideoPath);
 
     if (options.withSubtitles) {
       // Mock subtitle file creation
