@@ -1,0 +1,28 @@
+name: Auto Merge
+
+on:
+  pull_request:
+    types: [labeled, unlabeled, opened, synchronize, ready_for_review]
+  check_suite:
+    types: [completed]
+  status: {}
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Automerge-Action: merged wenn alle Checks grün + Label "automerge" vorhanden
+      - name: Auto Merge
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
+          MERGE_LABELS: automerge
+          MERGE_DELETE_BRANCH: "true"
+          MERGE_RETRIES: "24"
+          MERGE_RETRY_SLEEP: "30"
