@@ -1,5 +1,5 @@
 // Code and comments in English only
-import { UploadResult, AssetKind } from '@/types/avatar-builder.d';
+import { UploadResult, AssetKind } from '@/types/avatar-builder';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs/promises';

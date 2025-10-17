@@ -23,7 +23,7 @@ import {
   PrebuiltVoice,
   AvailableStyle,
   AvailableBackground,
-} from '@/types/avatar-builder.d';
+} from '@/types/avatar-builder';
 import { VoiceCloningConsentDialog } from '@/components/dialogs/VoiceCloningConsentDialog';
 
 type Step = 'upload' | 'script' | 'voice' | 'style' | 'render' | 'export';

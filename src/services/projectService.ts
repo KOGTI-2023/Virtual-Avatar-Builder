@@ -1,6 +1,6 @@
 // Code and comments in English only
 import { getDb } from '@/lib/database';
-import { Project, UploadResult, ScriptInput, VoiceSpec, StyleSpec, RenderResult } from '@/types/avatar-builder.d';
+import { Project } from '@/types/avatar-builder';
 import { v4 as uuidv4 } from 'uuid';
 
 export class ProjectService {
@@ -12,7 +12,10 @@ export class ProjectService {
       createdAt: new Date().toISOString(),
       lastModified: new Date().toISOString(),
     };
-    db.data?.projects.push(newProject);
+    if (!db.data) {
+      db.data = { examples: [], projects: [] };
+    }
+    db.data.projects.push(newProject);
     await db.write();
     return newProject;
   }
@@ -25,6 +28,9 @@ export class ProjectService {
 
   async updateProject(id: string, updates: Partial<Project>): Promise<Project | undefined> {
     const db = await getDb();
+    if (!db.data) {
+      db.data = { examples: [], projects: [] };
+    }
     const projectIndex = db.data?.projects.findIndex(p => p.id === id);
 
     if (projectIndex !== undefined && projectIndex > -1 && db.data) {
@@ -41,17 +47,22 @@ export class ProjectService {
 
   async deleteProject(id: string): Promise<boolean> {
     const db = await getDb();
-    const initialLength = db.data?.projects.length || 0;
-    if (db.data) {
-      db.data.projects = db.data.projects.filter(p => p.id !== id);
-      await db.write();
+    if (!db.data) {
+      db.data = { examples: [], projects: [] };
     }
-    return (db.data?.projects.length || 0) < initialLength;
+    const initialLength = db.data.projects.length;
+    db.data.projects = db.data.projects.filter(p => p.id !== id);
+    await db.write();
+    return db.data.projects.length < initialLength;
   }
 
   async listProjects(): Promise<Project[]> {
     const db = await getDb();
     await db.read();
-    return db.data?.projects || [];
+    if (!db.data) {
+      db.data = { examples: [], projects: [] };
+      await db.write();
+    }
+    return db.data.projects;
   }
 }

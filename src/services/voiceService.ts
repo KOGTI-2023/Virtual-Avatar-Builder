@@ -1,14 +1,6 @@
 // Code and comments in English only
-import { VoiceSpec } from '@/types/avatar-builder.d';
+import { VoiceSpec, PrebuiltVoice } from '@/types/avatar-builder';
 import { v4 as uuidv4 } from 'uuid';
-
-export interface PrebuiltVoice {
-  id: string;
-  name: string;
-  description: string;
-  gender: 'male' | 'female' | 'neutral';
-  language: string;
-}
 
 export class VoiceService {
   private prebuiltVoices: PrebuiltVoice[] = [

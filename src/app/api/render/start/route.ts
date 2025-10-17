@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { RenderService } from '@/services/renderService';
-import { RenderRequest } from '@/types/avatar-builder.d';
+import { RenderRequest } from '@/types/avatar-builder';
 
 const renderService = new RenderService();
 

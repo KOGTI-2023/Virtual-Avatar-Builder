@@ -2,15 +2,17 @@
 
 export type AssetKind = 'image' | 'video';
 
+export interface AssetQuality {
+  faceDetected: boolean;
+  sharpness: number;   // normalized 0..1
+  notes: string[];
+}
+
 export interface UploadResult {
   assetId: string;
   kind: AssetKind;
   durationSec?: number;
-  quality: {
-    faceDetected: boolean;
-    sharpness: number;   // normalized 0..1
-    notes: string[];
-  };
+  quality: AssetQuality;
 }
 
 export interface ScriptInput {
@@ -31,6 +33,18 @@ export interface StyleSpec {
   background: 'solid' | 'image' | 'transparent';
   bgColor?: string;
   bgImageId?: string;
+}
+
+export interface AvailableStyle {
+  id: StyleSpec['look'];
+  name: string;
+  description: string;
+}
+
+export interface AvailableBackground {
+  id: StyleSpec['background'];
+  name: string;
+  description: string;
 }
 
 export interface RenderRequest {
@@ -64,6 +78,14 @@ export interface ExportResult {
   videoUrl: string;
   subtitlesUrl?: string;
   pngSequenceUrl?: string;
+}
+
+export interface PrebuiltVoice {
+  id: string;
+  name: string;
+  description: string;
+  gender: 'male' | 'female' | 'neutral';
+  language: string;
 }
 
 // Project structure for lowdb

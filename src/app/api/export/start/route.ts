@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ExportService } from '@/services/exportService';
-import { ExportOptions, RenderResult } from '@/types/avatar-builder.d';
+import { ExportOptions, RenderResult } from '@/types/avatar-builder';
 
 const exportService = new ExportService();
 

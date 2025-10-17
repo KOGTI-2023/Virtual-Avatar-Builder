@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { QualityService } from '@/services/qualityService';
-import { AssetKind } from '@/types/avatar-builder.d';
+import { AssetKind } from '@/types/avatar-builder';
 
 const qualityService = new QualityService();
 
