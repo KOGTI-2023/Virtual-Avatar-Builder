@@ -8,6 +8,7 @@ _Last updated: 2025-10-23_
 |---------|---------------|--------|
 | Refactor LowDB initialization | Persistente Defaults und Fehlerhandling | ✅ |
 | Projekt-API härten | Route-Signaturen und Fehlerbehandlung aktualisieren | ✅ |
+| Kalender auf React 19 heben | `react-day-picker` vendorisiert und getestet | ✅ |
 | ESLint-Setup abschließen | Paket installieren & CI-Lint reaktivieren | 🟠 |
 | Formvalidierung mit React Hook Form verbessern | Client-Formulare absichern | ⬜ |
 | Voice-Synthese anbinden | Schnittstelle zu TTS-Diensten | ⬜ |
@@ -21,6 +22,7 @@ _Last updated: 2025-10-23_
 |-------|--------|---------|
 | Build läuft fehlerfrei | 🟡 | Fonts von Google blockieren Offline-Builds |
 | ESLint-Pipeline | ❌ | Paket fehlt, Builds skippen Lint |
+| Lokaler Vendor-Sync für Kernabhängigkeiten | 🟢 | `react-day-picker` 9.0.0 lokal gespiegelt |
 | TypeScript-Strictness | ✅ | Server-Routen sind typsicher |
 | API-Keys via `.env` | ✅ | Keine sensiblen Keys im Repo |
 | CI-Workflows | 🟡 | Läuft, aber Lint-Job derzeit wirkungslos |
