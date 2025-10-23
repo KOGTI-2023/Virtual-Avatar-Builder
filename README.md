@@ -65,7 +65,7 @@ On the first run, `lowdb` creates `./data/db.json` automatically. Media director
 
 API routes live under `src/app/api/` and can be exercised locally with tools such as `curl` or Postman:
 - `POST /api/ingest/upload` – Upload assets (video or image)
-- `POST /api/script/from-text` and `POST /api/script/from-audio` – Create or transcribe scripts
+- `POST /api/script/text` and `POST /api/script/audio` – Create or transcribe scripts
 - `GET /api/voice/prebuilt` and `POST /api/voice/clone` – Manage voices
 - `POST /api/style/apply` – Apply avatar styling
 - `POST /api/render/start` – Kick off rendering with progress updates
