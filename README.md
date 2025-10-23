@@ -1,4 +1,4 @@
-# Customized Template from Djad to an Virtual-Avatar-Builder
+# Virtual Avatar Builder - Customized Dyad Template
 
 This repository provides a robust boilerplate for building and deploying Next.js applications fully containerized with Docker, leveraging GitHub Container Registry (GHCR) for image hosting, and using a **pure JavaScript JSON database (`lowdb`)** as the backend. It also includes configuration for Next.js API proxying to handle external API integrations and CORS issues seamlessly.
 
