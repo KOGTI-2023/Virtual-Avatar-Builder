@@ -37,7 +37,7 @@ Follow these steps to spin up the development environment.
 ### 🪄 Step 1 · Clone the repository
 ```bash
 git clone https://github.com/KOGTI-2023/Virtual-Avatar-Builder.git
-cd virtual-avatar-builder
+cd Virtual-Avatar-Builder
 ```
 
 ### 📦 Step 2 · Install dependencies
