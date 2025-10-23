@@ -7,6 +7,7 @@ _Last updated: 2025-10-23_
 - Next.js App-Router läuft lokal, Fonts aus dem Netz blockieren derzeit Builds im Offline-Umfeld.
 - API-Layer wurde gefixt: Projekt-Routen verwenden jetzt typsichere Kontext-Signaturen und robustes Error-Handling.
 - ESLint ist noch nicht installiert; Builds werden dennoch fortgesetzt, da Linting während Builds deaktiviert wurde.
+- `react-day-picker` liegt nun als lokale Vendor-Kopie in Version 9.0.0 vor, um React 19 zu unterstützen.
 
 ---
 
@@ -24,6 +25,7 @@ _Last updated: 2025-10-23_
 ## 🧩 Letzte Änderungen
 - Route-Handler unter `src/app/api/projects/[id]/route.ts` auf `NextRequest`/Kontext-Signatur umgestellt und Fehlerbehandlung vereinheitlicht.
 - Next.js-Konfiguration so angepasst, dass Builds auch ohne lokale ESLint-Installation laufen.
+- `react-day-picker` lokal auf Version 9.0.0 gespiegelt und `Calendar`-Komponente auf Kompatibilität geprüft.
 
 ---
 
@@ -31,6 +33,7 @@ _Last updated: 2025-10-23_
 - ESLint als Dev-Dependency installieren, sobald Registry-Zugriff möglich ist.
 - Offline-taugliche Font-Strategie (lokale Bereitstellung oder Fallback) implementieren.
 - CI-Linting wieder aktivieren, sobald ESLint verfügbar ist.
+- Offizielles npm-Paket erneut einbinden, sobald der Registry-Zugriff wiederhergestellt ist.
 
 ---
 
