@@ -1,46 +1,43 @@
 # ✅ Development Checklist – Virtual Avatar Builder
-
-_Last updated: {{date}}_
-
----
-
-## 🧩 Core Tasks
-| Task | Description | Done |
-|------|--------------|------|
-| ✅ | Refactor LowDB initialization | ✅ |
-| ✅ | Add ESLint config & CI pipeline | ✅ |
-| ⬜ | Improve form validation using React Hook Form |  |
-| ⬜ | Integrate real AI model for quality evaluation |  |
-| ⬜ | Implement voice synthesis interface |  |
-| ⬜ | Optimize rendering performance for avatar preview |  |
-| ⬜ | Add tests for export and import modules |  |
+_Last updated: 2025-10-23_
 
 ---
 
-## ⚙️ Technical Quality Checks
-| Check | Status | Notes |
-|--------|---------|-------|
-| Code builds without errors | ✅ |  |
-| ESLint passes | 🟡 | Minor warnings |
-| API keys secured via .env | ✅ | Verified |
-| TypeScript type safety | ✅ | Improved by Codex |
-| Automated CI/CD active | ✅ | via GitHub Actions |
+## 🧩 Kernaufgaben
+| Aufgabe | Beschreibung | Status |
+|---------|---------------|--------|
+| Refactor LowDB initialization | Persistente Defaults und Fehlerhandling | ✅ |
+| Projekt-API härten | Route-Signaturen und Fehlerbehandlung aktualisieren | ✅ |
+| ESLint-Setup abschließen | Paket installieren & CI-Lint reaktivieren | 🟠 |
+| Formvalidierung mit React Hook Form verbessern | Client-Formulare absichern | ⬜ |
+| Voice-Synthese anbinden | Schnittstelle zu TTS-Diensten | ⬜ |
+| Avatar-Preview performanceoptimieren | Rendering-Profiling & Memoization | ⬜ |
+| Tests für Export-/Importflüsse ergänzen | Regressionen verhindern | ⬜ |
+
+---
+
+## ⚙️ Technische Qualitätschecks
+| Check | Status | Notizen |
+|-------|--------|---------|
+| Build läuft fehlerfrei | 🟡 | Fonts von Google blockieren Offline-Builds |
+| ESLint-Pipeline | ❌ | Paket fehlt, Builds skippen Lint |
+| TypeScript-Strictness | ✅ | Server-Routen sind typsicher |
+| API-Keys via `.env` | ✅ | Keine sensiblen Keys im Repo |
+| CI-Workflows | 🟡 | Läuft, aber Lint-Job derzeit wirkungslos |
 
 ---
 
 ## 📦 Release Readiness
-| Aspect | Status | Notes |
-|---------|---------|-------|
-| Documentation | 🟡 | Needs more user-facing docs |
-| Testing | 🟠 | Partial coverage |
-| UI polish | 🟢 | Acceptable |
-| Performance | 🟡 | Further profiling planned |
-| Security audit | ⬜ | Not started |
+| Aspekt | Status | Hinweise |
+|--------|--------|----------|
+| Dokumentation | 🟡 | Entwickler-Doku aktualisiert, User-Doku offen |
+| Testabdeckung | 🟠 | Kernpfade ungetestet |
+| UI-Polish | 🟢 | Funktionsfähig, Feinschliff möglich |
+| Performance | 🟡 | Avatar-Rendering prüfen |
+| Sicherheit | ⬜ | Keine dedizierte Prüfung erfolgt |
 
 ---
 
-## 🧾 Notes for Codex
-- Update only after completing a **module** or **feature milestone**.  
-- Keep symbols consistent (`✅`, `🟡`, `🟠`, `⬜`) for quick scanning.  
-- Avoid verbose descriptions – focus on measurable progress.  
-- Sync this file with `STATUS.md` summaries when needed.
+## 🧾 Hinweise für Codex
+- Sobald Registry-Zugriff wieder möglich ist, `pnpm install --save-dev eslint` ausführen und `next.config.ts`-Bypass entfernen.
+- Font-Fetch-Fehler in Offline-Umgebungen durch lokale Bundles oder Self-Hosting lösen.

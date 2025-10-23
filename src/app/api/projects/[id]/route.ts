@@ -1,47 +1,66 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ProjectService } from '@/services/projectService';
 
 const projectService = new ProjectService();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+type ProjectRouteContext = {
+  params: {
+    id: string;
+  };
+};
+
+function toErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : 'Unknown error';
+}
+
+export async function GET(_request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const project = await projectService.getProject(id);
     if (!project) {
       return NextResponse.json({ message: 'Projekt nicht gefunden' }, { status: 404 });
     }
     return NextResponse.json(project);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Fehler beim Abrufen des Projekts:', error);
-    return NextResponse.json({ message: 'Fehler beim Abrufen des Projekts', error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Fehler beim Abrufen des Projekts', error: toErrorMessage(error) },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const updates = await request.json();
     const updatedProject = await projectService.updateProject(id, updates);
     if (!updatedProject) {
       return NextResponse.json({ message: 'Projekt nicht gefunden' }, { status: 404 });
     }
     return NextResponse.json(updatedProject);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Fehler beim Aktualisieren des Projekts:', error);
-    return NextResponse.json({ message: 'Fehler beim Aktualisieren des Projekts', error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Fehler beim Aktualisieren des Projekts', error: toErrorMessage(error) },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const deleted = await projectService.deleteProject(id);
     if (!deleted) {
       return NextResponse.json({ message: 'Projekt nicht gefunden oder konnte nicht gelöscht werden' }, { status: 404 });
     }
     return NextResponse.json({ message: 'Projekt erfolgreich gelöscht' }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Fehler beim Löschen des Projekts:', error);
-    return NextResponse.json({ message: 'Fehler beim Löschen des Projekts', error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Fehler beim Löschen des Projekts', error: toErrorMessage(error) },
+      { status: 500 }
+    );
   }
 }
