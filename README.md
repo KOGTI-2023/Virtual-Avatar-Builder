@@ -67,7 +67,7 @@ API routes live under `src/app/api/` and can be exercised locally with tools suc
 - `POST /api/ingest/upload` – Upload assets (video or image)
 - `POST /api/script/text` and `POST /api/script/audio` – Create or transcribe scripts
 - `GET /api/voice/prebuilt` and `POST /api/voice/clone` – Manage voices
-- `POST /api/style/apply` – Apply avatar styling
+- `GET /api/style/available` – Get available avatar styles
 - `POST /api/render/start` – Kick off rendering with progress updates
 - `POST /api/export/create` – Trigger exports (MP4, PNG sequence, subtitles)
 - `GET/POST /api/projects` – Create, update, and retrieve projects
