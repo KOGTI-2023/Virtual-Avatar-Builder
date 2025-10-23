@@ -69,7 +69,7 @@ API routes live under `src/app/api/` and can be exercised locally with tools suc
 - `GET /api/voice/prebuilt` and `POST /api/voice/clone` – Manage voices
 - `GET /api/style/available` – Get available avatar styles
 - `POST /api/render/start` – Kick off rendering with progress updates
-- `POST /api/export/create` – Trigger exports (MP4, PNG sequence, subtitles)
+- `POST /api/export/start` – Trigger exports (MP4, PNG sequence, subtitles)
 - `GET/POST /api/projects` – Create, update, and retrieve projects
 
 Each endpoint persists its status in the JSON database and writes files to the matching directories under `public/`.
