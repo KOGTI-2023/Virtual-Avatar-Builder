@@ -40,17 +40,27 @@ git clone https://github.com/KOGTI-2023/Virtual-Avatar-Builder.git
 cd Virtual-Avatar-Builder
 ```
 
-### 📦 Step 2 · Install dependencies
+### 🛡️ Step 2 · Create a virtual environment
 ```bash
-pnpm install   # or: npm install
+python -m venv .venv
 ```
 
-### 🖥️ Step 3 · Launch the development server
+### 🔄 Step 3 · Activate the virtual environment
 ```bash
-pnpm dev       # or: npm run dev
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 ```
 
-### 🌐 Step 4 · Open the application
+### 📦 Step 4 · Install dependencies
+```bash
+pnpm install                # or: npm install
+```
+
+### 🖥️ Step 5 · Launch the development server
+```bash
+pnpm dev                    # or: npm run dev
+```
+
+### 🌐 Step 6 · Open the application
 Navigate to [http://localhost:3000](http://localhost:3000).
 
 On the first run, `lowdb` creates `./data/db.json` automatically. Media directories inside `public/` already exist and are ready to use.
