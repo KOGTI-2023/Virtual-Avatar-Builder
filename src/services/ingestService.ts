@@ -1,5 +1,5 @@
 // Code and comments in English only
-import { UploadResult, AssetKind } from '@/types/avatar-builder';
+import { UploadResult, AssetKind, AssetQuality } from '@/types/avatar-builder';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs/promises';
@@ -24,7 +24,7 @@ export class IngestService {
     let durationSec: number | undefined;
 
     // Mock quality check for now
-    const quality = {
+    const quality: AssetQuality = {
       faceDetected: true, // Assume face detected for mock
       sharpness: 0.9,     // Assume good sharpness for mock
       notes: [],

@@ -1,93 +1,85 @@
-# 🧠 Virtual Avatar Builder
+# Virtual Avatar Builder
 
-The Virtual Avatar Builder is a multi-step Next.js application that helps you create talking avatars from your own assets. The workflow guides you from asset collection through script and voice design to rendering and export. All project and pipeline data is stored locally via a JSON database (`lowdb`) and dedicated media folders so the entire process runs without external services by default.
+Der Virtual Avatar Builder ist eine mehrstufige Next.js-Anwendung, die das Erstellen sprechender Avatare aus eigenen Assets ermoeglicht. Der Assistent fuehrt von Upload, Skript und Stimme ueber Stil und Rendering bis zum Export. Alle Daten werden lokal in einer JSON-Datenbank (LowDB) sowie in dedizierten Medienordnern gespeichert. Damit bleibt der gesamte Prozess standardmaessig offline faehig.
 
-## 🚀 Key Features
+## Funktionsumfang
+- Gefuehrter Sechs-Schritte-Flow (Upload -> Script -> Voice -> Style -> Render -> Export)
+- Projektverwaltung mit automatischer Zwischenspeicherung nach jedem Arbeitsschritt
+- Unterstuetzung fuer Text- oder Audio-Skripte sowie optionales Voice Cloning mit Consent-Token
+- Anpassbare Styles, Hintergruende und Wasserzeichen
+- Rendering- und Export-Endpunkte fuer MP4, PNG-Sequenzen und Untertitel
+- Datenschutzfreundlich: Alle Dateien verbleiben lokal, externe Integrationen sind optional
 
-- Guided six-step experience (Upload → Script → Voice → Style → Render → Export)
-- Project management with automatic persistence for every step
-- Support for text or audio scripts plus optional voice cloning with explicit consent tokens
-- Style management with configurable looks, backgrounds, and watermarks
-- Rendering and export endpoints for MP4 video, PNG image sequences, and subtitle tracks
-- Privacy-first approach: all files stay on your machine unless you opt into external integrations
-
-## 🗂️ Project Structure
-```
+## Projektstruktur
+```text
 .
-├── src/app/page.tsx             # Multi-step avatar builder UI
-├── src/app/api/*                # API routes for upload, script, voice, render, export, etc.
-├── src/lib/database.ts          # lowdb initialization (JSON database at ./data/db.json)
-├── public/uploads               # Uploaded assets
-├── public/audio                 # Script and voice audio files
-├── public/renders               # Intermediate render artifacts
-├── public/exports               # Final exported files
-└── docker-compose.yml           # Optional container orchestration
+├─ src/app/page.tsx            # Mehrstufiges UI fuer den Avatar-Builder
+├─ src/app/api/*               # API-Routen fuer Upload, Script, Voice, Render, Export usw.
+├─ src/lib/database.ts         # LowDB-Initialisierung (JSON-Datenbank unter ./data/db.json)
+├─ public/uploads              # Hochgeladene Assets
+├─ public/audio                # Skript- und Voice-Audio
+├─ public/renders              # Zwischenprodukte aus dem Rendering
+├─ public/exports              # Finale Exportdateien
+├─ docker-compose.yml          # Optionales Container-Setup
+└─ Dockerfile                  # Produktions-Build fuer Next.js
 ```
 
-## 🧰 Requirements
-
+## Voraussetzungen
 - Git
-- Node.js ≥ 18 (with npm or pnpm)
-- Optional: Docker and Docker Compose for containerized deployments
+- Node.js >= 18.18 (empfohlen: 20) mit npm
+- Optional: Docker und Docker Compose fuer containerisierte Umgebungen
 
-## ⚡ Quick Start
+## Schnellstart
+1. Repository klonen  
+   ```bash
+   git clone https://github.com/KOGTI-2023/Virtual-Avatar-Builder.git
+   cd Virtual-Avatar-Builder
+   ```
+2. Abhaengigkeiten installieren  
+   ```bash
+   npm install
+   ```
+3. Entwicklungsserver starten  
+   ```bash
+   npm run dev
+   ```
+4. Anwendung im Browser oeffnen: <http://localhost:3000>
 
-Follow these steps to spin up the development environment.
+Beim ersten Start legt LowDB automatisch `./data/db.json` an. Die Medienordner unter `public/` sind bereits vorbereitet.
 
-### 🪄 Step 1 · Clone the repository
-```bash
-git clone https://github.com/KOGTI-2023/Virtual-Avatar-Builder.git
-cd Virtual-Avatar-Builder
-```
+## Konfiguration
+- **DATABASE_DIR**: Pfad zur LowDB-Datenbank (Standard: `./data`). Kann per Umgebungsvariable angepasst werden.
+- **EXTERNAL_API_URL_SERVICE1 / SERVICE2**: Optionale Proxy-Ziele fuer externe Backends, die ueber Next.js-Rewrites erreichbar sein sollen.
+- **WEATHER_API_URL**: Beispiel fuer einen zusaetzlichen Proxy-Endpunkt (z. B. Wetterdaten).
+- **EXTERNAL_STT_API_URL**: Proxy-Ziel fuer eine Speech-to-Text-Integration.
 
-### 📦 Step 2 · Install dependencies
-```bash
-pnpm install                # or: npm install
-```
+Siehe `.env.example` fuer kommentierte Platzhalterwerte.
 
-### 🖥️ Step 3 · Launch the development server
-```bash
-pnpm dev                    # or: npm run dev
-```
+## API-Routen
+Alle APIs liegen unter `src/app/api/` und lassen sich lokal mit Tools wie cURL oder Postman testen.
 
-### 🌐 Step 4 · Open the application
-Navigate to [http://localhost:3000](http://localhost:3000).
+- `POST /api/ingest/upload` – Asset-Upload (Bild oder Video)
+- `POST /api/script/text` / `POST /api/script/audio` – Skripterstellung bzw. Transkription
+- `GET /api/voice/prebuilt` / `POST /api/voice/clone` – Verwaltung von Stimmen
+- `GET /api/style/available` – Verfuegbare Avatar-Stile
+- `POST /api/render/start` – Rendering mit Fortschrittsupdates
+- `GET /api/render/progress/:id` – Fortschritt eines Renderjobs
+- `POST /api/export/start` – Export (MP4, optional PNG-Sequenz oder Untertitel)
+- `GET /api/projects` / `POST /api/projects` – Projekte lesen oder anlegen
+- `PUT /api/projects/:id` / `DELETE /api/projects/:id` – Projekte aktualisieren bzw. loeschen
 
-On the first run, `lowdb` creates `./data/db.json` automatically. Media directories inside `public/` already exist and are ready to use.
+Jeder Endpunkt aktualisiert die JSON-Datenbank und schreibt Dateien in die passenden Unterordner von `public/`.
 
-## ⚙️ Configuration
-
-- **Database path**: Set `DATABASE_DIR` (e.g., in `.env` or your Docker environment) to change where `db.json` is stored. The default is `./data` in the project root.
-- **External APIs**: Optional proxies to STT/TTS or other services are wired through environment variables consumed in `next.config.ts` (for example `EXTERNAL_STT_API_URL`). If no variable is set, the proxy remains disabled.
-- **Voice cloning consent**: Voice cloning requires an explicit opt-in with a consent token handled by the `VoiceCloningConsentDialog`.
-
-## 🔌 API & Upload Endpoints
-
-API routes live under `src/app/api/` and can be exercised locally with tools such as `curl` or Postman:
-- `POST /api/ingest/upload` – Upload assets (video or image)
-- `POST /api/script/text` and `POST /api/script/audio` – Create or transcribe scripts
-- `GET /api/voice/prebuilt` and `POST /api/voice/clone` – Manage voices
-- `GET /api/style/available` – Get available avatar styles
-- `POST /api/render/start` – Kick off rendering with progress updates
-- `POST /api/export/start` – Trigger exports (MP4, PNG sequence, subtitles)
-- `GET/POST /api/projects` – Create, update, and retrieve projects
-
-Each endpoint persists its status in the JSON database and writes files to the matching directories under `public/`.
-
-## 🐳 Docker Compose
-
-Use `docker-compose.yml` for a containerized setup. Before launching, adjust the referenced image to match your registry or build pipeline (for example, a local build or a custom GHCR image).
+## Docker Compose
+`docker-compose.yml` liefert ein Beispiel-Setup fuer eine containerisierte Bereitstellung. Vor dem Start sollte das Image-Tag angepasst oder ein eigenes Image gebaut werden. Persistente Daten (Datenbank, Uploads, Audio, Renders, Exports) sind als Volumes eingetragen.
 
 ```bash
 docker compose up -d
 ```
 
-Named volumes keep the database and media assets persistent (`./data`, `./public/uploads`, `./public/audio`, `./public/renders`, `./public/exports`).
+## Weiteres
+- Die Anwendung nutzt shadcn/ui-Komponenten (siehe `src/components/ui`).
+- Projektspezifische Typdefinitionen befinden sich in `src/types/avatar-builder.d.ts`.
+- Fuer produktive Szenarien sollten Reverse-Proxy, HTTPS und Upload-Limits ergaenzt werden.
 
-## 🧭 Additional Resources
-
-- The builder relies on the shadcn/ui component kit (see `src/components/ui/*`).
-- Type definitions for projects, scripts, voices, and more live in `src/types/avatar-builder.d.ts`.
-- For production scenarios, harden the deployment with a reverse proxy, HTTPS, and tightened upload limits.
-
-If you have questions or run into issues, explore the API route implementations and the React components driving each step. Contributions and feature ideas are welcome through issues or pull requests.
+Feedback und Erweiterungen sind willkommen – gern Issues oder Pull Requests eroeffnen.

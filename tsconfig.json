@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    "types": ["node", "react"],
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -21,9 +22,21 @@
     // Essential for absolute imports from 'src'
     "baseUrl": ".", // This tells TypeScript to resolve modules relative to the project root
     "paths": {
-      "@/*": ["./src/*"] // This maps '@/anything' to './src/anything'
+      "@/*": ["./src/*"], // This maps '@/anything' to './src/anything'
+      "components/*": ["./vendor/react-day-picker/src/components/*"],
+      "contexts/*": ["./vendor/react-day-picker/src/contexts/*"],
+      "hooks/*": ["./vendor/react-day-picker/src/hooks/*"],
+      "types/*": ["./vendor/react-day-picker/src/types/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "pages/**/*.ts",
+    "pages/**/*.tsx",
+    "types/**/*.d.ts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
