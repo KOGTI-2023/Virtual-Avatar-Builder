@@ -4,15 +4,15 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package.json and package-lock.json (or yarn.lock) to leverage Docker cache
-COPY package.json yarn.lock* ./
-RUN yarn install --frozen-lockfile
+COPY package.json package-lock.json* ./
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
 
 # Build the Next.js application
 # 'output' directory contains the optimized Next.js build
-RUN yarn build
+RUN npm run build
 
 # Stage 2: Create the production-ready image
 FROM node:20-alpine
@@ -38,5 +38,5 @@ COPY --from=builder /app/public ./public
 EXPOSE 3000
 
 # Command to run the Next.js application in production mode
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
 

@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import {
   UploadResult,
   ScriptInput,
@@ -28,6 +29,27 @@ import {
 import { VoiceCloningConsentDialog } from '@/components/dialogs/VoiceCloningConsentDialog';
 
 type Step = 'upload' | 'script' | 'voice' | 'style' | 'render' | 'export';
+
+type WrapperProps = {
+  children: React.ReactNode;
+  className?: string;
+};
+
+const PROJECT_CARD_CLASSES = 'w-full bg-black/60 border border-amber-400/30 text-amber-100 shadow-lg';
+const STEP_SECTION_BASE_CLASSES = 'flex flex-col gap-4';
+const HIGHLIGHT_PANEL_BASE_CLASSES = 'p-3 border border-amber-400/40 rounded-md bg-amber-500/10';
+
+const StepSection = ({ children, className }: WrapperProps) => (
+  <div className={cn(STEP_SECTION_BASE_CLASSES, className)}>{children}</div>
+);
+
+const HighlightPanel = ({ children, className }: WrapperProps) => (
+  <div className={cn(HIGHLIGHT_PANEL_BASE_CLASSES, className)}>{children}</div>
+);
+
+const OptionRow = ({ children, className }: WrapperProps) => (
+  <div className={cn('flex items-center space-x-2', className)}>{children}</div>
+);
 
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<Step>('upload');
@@ -445,12 +467,12 @@ export default function Home() {
         </p>
 
         {!currentProject ? (
-          <Card className="w-full bg-black/60 border border-amber-400/30 text-amber-100 shadow-lg">
+          <Card className={PROJECT_CARD_CLASSES}>
             <CardHeader>
               <CardTitle>Neues Projekt starten</CardTitle>
               <CardDescription>Geben Sie einen Namen für Ihr neues Avatar-Projekt ein.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent className={STEP_SECTION_BASE_CLASSES}>
               <Input
                 placeholder="Projektname"
                 value={projectName}
@@ -462,7 +484,7 @@ export default function Home() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="w-full bg-black/60 border border-amber-400/30 text-amber-100 shadow-lg">
+          <Card className={PROJECT_CARD_CLASSES}>
             <CardHeader>
               <CardTitle>Projekt: {currentProject.name}</CardTitle>
               <CardDescription>Letzte Änderung: {new Date(currentProject.lastModified).toLocaleString()}</CardDescription>
@@ -484,12 +506,12 @@ export default function Home() {
 
               {/* Step 1: Upload */}
               {currentStep === 'upload' && (
-                <div className="flex flex-col gap-4">
+                <StepSection>
                   <Label htmlFor="asset-upload">Bild oder Video hochladen</Label>
                   <Input id="asset-upload" type="file" accept="image/*,video/*" onChange={handleFileChange} />
                   {selectedFile && <p className="text-sm text-muted-foreground">Ausgewählte Datei: {selectedFile.name}</p>}
                   {uploadResult && (
-                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-2">
                       <p className="text-sm font-medium">Asset hochgeladen:</p>
                       <p className="text-xs">ID: {uploadResult.assetId}</p>
                       <p className="text-xs">Typ: {uploadResult.kind}</p>
@@ -500,17 +522,17 @@ export default function Home() {
                       {uploadResult.kind === 'video' && uploadResult.durationSec && (
                         <p className="text-xs">Dauer: {uploadResult.durationSec} Sekunden</p>
                       )}
-                    </div>
+                    </HighlightPanel>
                   )}
                   <Button onClick={handleUpload} disabled={!selectedFile || isUploading}>
                     {isUploading ? 'Wird hochgeladen...' : 'Hochladen & Prüfen'}
                   </Button>
-                </div>
+                </StepSection>
               )}
 
               {/* Step 2: Script */}
               {currentStep === 'script' && (
-                <div className="flex flex-col gap-4">
+                <StepSection>
                   <Label>Skript-Eingabeart</Label>
                   <Select value={scriptInputType} onValueChange={(value: 'text' | 'audio') => setScriptInputType(value)}>
                     <SelectTrigger>
@@ -542,21 +564,21 @@ export default function Home() {
                   )}
 
                   {scriptResult && (
-                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-2">
                       <p className="text-sm font-medium">Skript verarbeitet:</p>
                       <p className="text-xs">Transkript: {scriptResult.transcript?.substring(0, 100)}...</p>
                       {scriptResult.subtitles && <p className="text-xs">Untertitel generiert.</p>}
-                    </div>
+                    </HighlightPanel>
                   )}
                   <Button onClick={handleProcessScript} disabled={isProcessingScript || (scriptInputType === 'text' && !scriptText.trim()) || (scriptInputType === 'audio' && !scriptAudioFile)}>
                     {isProcessingScript ? 'Wird verarbeitet...' : 'Skript verarbeiten'}
                   </Button>
-                </div>
+                </StepSection>
               )}
 
               {/* Step 3: Voice */}
               {currentStep === 'voice' && (
-                <div className="flex flex-col gap-4">
+                <StepSection>
                   <Label htmlFor="prebuilt-voice">Vordefinierte Stimme auswählen</Label>
                   <Select value={selectedVoiceId} onValueChange={setSelectedVoiceId}>
                     <SelectTrigger id="prebuilt-voice">
@@ -596,11 +618,11 @@ export default function Home() {
                   </div>
 
                   {voiceSpec && (
-                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-2">
                       <p className="text-sm font-medium">Stimme ausgewählt:</p>
                       <p className="text-xs">ID: {voiceSpec.id}</p>
                       <p className="text-xs">Geklont: {voiceSpec.cloned ? 'Ja' : 'Nein'}</p>
-                    </div>
+                    </HighlightPanel>
                   )}
                   <VoiceCloningConsentDialog
                     isOpen={isVoiceCloningConsentOpen}
@@ -612,12 +634,12 @@ export default function Home() {
                       toast.info('Stimmenklonen abgebrochen.');
                     }}
                   />
-                </div>
+                </StepSection>
               )}
 
               {/* Step 4: Style */}
               {currentStep === 'style' && (
-                <div className="flex flex-col gap-4">
+                <StepSection>
                   <Label htmlFor="avatar-look">Avatar-Look auswählen</Label>
                   <Select value={selectedLook} onValueChange={(value: StyleSpec['look']) => setSelectedLook(value)}>
                     <SelectTrigger id="avatar-look">
@@ -669,21 +691,21 @@ export default function Home() {
                   )}
 
                   {styleSpec && (
-                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-2">
                       <p className="text-sm font-medium">Stil ausgewählt:</p>
                       <p className="text-xs">Look: {styleSpec.look}</p>
                       <p className="text-xs">Hintergrund: {styleSpec.background}</p>
                       {styleSpec.bgColor && <p className="text-xs">Farbe: {styleSpec.bgColor}</p>}
-                    </div>
+                    </HighlightPanel>
                   )}
                   <Button onClick={handleSelectStyle}>Stil auswählen</Button>
-                </div>
+                </StepSection>
               )}
 
               {/* Step 5: Render */}
               {currentStep === 'render' && (
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center space-x-2">
+                <StepSection>
+                  <OptionRow>
                     <Checkbox
                       id="watermark"
                       checked={watermark}
@@ -692,7 +714,7 @@ export default function Home() {
                     <Label htmlFor="watermark">
                       &quot;KI-generiert&quot;-Wasserzeichen hinzufügen
                     </Label>
-                  </div>
+                  </OptionRow>
                   <Button onClick={handleStartRender} disabled={isRendering || !uploadResult || !scriptResult || !voiceSpec || !styleSpec}>
                     {isRendering ? 'Wird gerendert...' : 'Rendering starten'}
                   </Button>
@@ -706,22 +728,22 @@ export default function Home() {
                   )}
 
                   {renderResult && (
-                    <div className="mt-4 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-4">
                       <p className="text-sm font-medium">Rendering abgeschlossen:</p>
                       <p className="text-xs">Render-ID: {renderResult.renderId}</p>
                       <p className="text-xs">Vorschau-URL: <a href={renderResult.previewUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{renderResult.previewUrl}</a></p>
                       <p className="text-xs">Dauer: {renderResult.durationSec} Sekunden</p>
                       <video src={renderResult.previewUrl} controls className="mt-2 w-full max-h-64 object-contain bg-black" />
-                    </div>
+                    </HighlightPanel>
                   )}
-                </div>
+                </StepSection>
               )}
 
               {/* Step 6: Export */}
               {currentStep === 'export' && (
-                <div className="flex flex-col gap-4">
+                <StepSection>
                   <Label>Export-Optionen</Label>
-                  <div className="flex items-center space-x-2">
+                  <OptionRow>
                     <Checkbox
                       id="with-subtitles"
                       checked={exportOptions.withSubtitles}
@@ -730,8 +752,8 @@ export default function Home() {
                     <Label htmlFor="with-subtitles">
                       Untertitel exportieren (SRT/WebVTT)
                     </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                  </OptionRow>
+                  <OptionRow>
                     <Checkbox
                       id="also-png-sequence"
                       checked={exportOptions.alsoPngSequence}
@@ -740,21 +762,21 @@ export default function Home() {
                     <Label htmlFor="also-png-sequence">
                       Auch PNG-Bildsequenz exportieren
                     </Label>
-                  </div>
+                  </OptionRow>
 
                   <Button onClick={handleStartExport} disabled={isExporting || !renderResult}>
                     {isExporting ? 'Wird exportiert...' : 'Export starten'}
                   </Button>
 
                   {exportResult && (
-                    <div className="mt-4 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
+                    <HighlightPanel className="mt-4">
                       <p className="text-sm font-medium">Export abgeschlossen:</p>
                       <p className="text-xs">Video-URL: <a href={exportResult.videoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{exportResult.videoUrl}</a></p>
                       {exportResult.subtitlesUrl && <p className="text-xs">Untertitel-URL: <a href={exportResult.subtitlesUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{exportResult.subtitlesUrl}</a></p>}
                       {exportResult.pngSequenceUrl && <p className="text-xs">PNG-Sequenz-URL: <a href={exportResult.pngSequenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{exportResult.pngSequenceUrl}</a></p>}
-                    </div>
+                    </HighlightPanel>
                   )}
-                </div>
+                </StepSection>
               )}
             </CardContent>
           </Card>

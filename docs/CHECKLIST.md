@@ -1,11 +1,12 @@
 # ✅ Development Checklist – Virtual Avatar Builder
-_Last updated: 2025-10-23_
+_Last updated: 2025-10-24_
 
 ---
 
 ## 🧩 Kernaufgaben
 | Aufgabe | Beschreibung | Status |
 |---------|---------------|--------|
+| Dockerfile auf npm umstellen | Container-Builds an npm-Workflows angleichen | ✅ |
 | Refactor LowDB initialization | Persistente Defaults und Fehlerhandling | ✅ |
 | Projekt-API härten | Route-Signaturen und Fehlerbehandlung aktualisieren | ✅ |
 | Kalender auf React 19 heben | `react-day-picker` vendorisiert und getestet | ✅ |
@@ -21,7 +22,7 @@ _Last updated: 2025-10-23_
 | Check | Status | Notizen |
 |-------|--------|---------|
 | Build läuft fehlerfrei | 🟡 | Fonts von Google blockieren Offline-Builds |
-| ESLint-Pipeline | ❌ | Paket fehlt, Builds skippen Lint |
+| ESLint-Pipeline | ❌ | Registry verweigert `next`/`eslint` (HTTP 403) |
 | Lokaler Vendor-Sync für Kernabhängigkeiten | 🟢 | `react-day-picker` 9.0.0 lokal gespiegelt |
 | TypeScript-Strictness | ✅ | Server-Routen sind typsicher |
 | API-Keys via `.env` | ✅ | Keine sensiblen Keys im Repo |
@@ -41,5 +42,5 @@ _Last updated: 2025-10-23_
 ---
 
 ## 🧾 Hinweise für Codex
-- Sobald Registry-Zugriff wieder möglich ist, `pnpm install --save-dev eslint` ausführen und `next.config.ts`-Bypass entfernen.
+- Sobald Registry-Zugriff wieder möglich ist, `npm install --save-dev eslint` ausführen und `next.config.ts`-Bypass entfernen.
 - Font-Fetch-Fehler in Offline-Umgebungen durch lokale Bundles oder Self-Hosting lösen.
