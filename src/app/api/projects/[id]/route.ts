@@ -4,9 +4,9 @@ import { ProjectService } from '@/services/projectService';
 const projectService = new ProjectService();
 
 type ProjectRouteContext = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 function toErrorMessage(error: unknown): string {
@@ -15,7 +15,7 @@ function toErrorMessage(error: unknown): string {
 
 export async function GET(_request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const project = await projectService.getProject(id);
     if (!project) {
       return NextResponse.json({ message: 'Projekt nicht gefunden' }, { status: 404 });
@@ -32,7 +32,7 @@ export async function GET(_request: NextRequest, context: ProjectRouteContext) {
 
 export async function PUT(request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const updates = await request.json();
     const updatedProject = await projectService.updateProject(id, updates);
     if (!updatedProject) {
@@ -50,7 +50,7 @@ export async function PUT(request: NextRequest, context: ProjectRouteContext) {
 
 export async function DELETE(_request: NextRequest, context: ProjectRouteContext) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
     const deleted = await projectService.deleteProject(id);
     if (!deleted) {
       return NextResponse.json({ message: 'Projekt nicht gefunden oder konnte nicht gelöscht werden' }, { status: 404 });

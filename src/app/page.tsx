@@ -19,6 +19,7 @@ import {
   RenderRequest,
   RenderResult,
   ExportOptions,
+  ExportResult,
   Project,
   PrebuiltVoice,
   AvailableStyle,
@@ -436,15 +437,15 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-rows-[1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-1 items-center sm:items-start w-full max-w-3xl">
-        <h1 className="text-4xl font-bold text-center sm:text-left">Virtueller Avatar-Ersteller</h1>
-        <p className="text-lg text-center sm:text-left text-muted-foreground">
+    <div className="grid grid-rows-[1fr_20px] items-center justify-items-center min-h-screen w-full bg-gradient-to-br from-black via-zinc-900 to-amber-600 text-amber-100 p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col gap-8 row-start-1 items-center sm:items-start w-full max-w-4xl rounded-3xl bg-black/70 border border-amber-500/30 p-8 sm:p-12 shadow-2xl backdrop-blur">
+        <h1 className="text-4xl font-bold text-center sm:text-left text-amber-100 drop-shadow-lg">Virtueller Avatar-Ersteller</h1>
+        <p className="text-lg text-center sm:text-left text-amber-200/80">
           Erstellen Sie Ihren sprechenden Avatar in wenigen einfachen Schritten.
         </p>
 
         {!currentProject ? (
-          <Card className="w-full">
+          <Card className="w-full bg-black/60 border border-amber-400/30 text-amber-100 shadow-lg">
             <CardHeader>
               <CardTitle>Neues Projekt starten</CardTitle>
               <CardDescription>Geben Sie einen Namen für Ihr neues Avatar-Projekt ein.</CardDescription>
@@ -461,7 +462,7 @@ export default function Home() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="w-full">
+          <Card className="w-full bg-black/60 border border-amber-400/30 text-amber-100 shadow-lg">
             <CardHeader>
               <CardTitle>Projekt: {currentProject.name}</CardTitle>
               <CardDescription>Letzte Änderung: {new Date(currentProject.lastModified).toLocaleString()}</CardDescription>
@@ -488,13 +489,13 @@ export default function Home() {
                   <Input id="asset-upload" type="file" accept="image/*,video/*" onChange={handleFileChange} />
                   {selectedFile && <p className="text-sm text-muted-foreground">Ausgewählte Datei: {selectedFile.name}</p>}
                   {uploadResult && (
-                    <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Asset hochgeladen:</p>
                       <p className="text-xs">ID: {uploadResult.assetId}</p>
                       <p className="text-xs">Typ: {uploadResult.kind}</p>
                       <p className="text-xs">Qualität: Gesicht erkannt: {uploadResult.quality.faceDetected ? 'Ja' : 'Nein'}, Schärfe: {(uploadResult.quality.sharpness * 100).toFixed(0)}%</p>
                       {uploadResult.quality.notes.length > 0 && (
-                        <p className="text-xs text-red-500">Hinweise: {uploadResult.quality.notes.join(', ')}</p>
+                        <p className="text-xs text-amber-300">Hinweise: {uploadResult.quality.notes.join(', ')}</p>
                       )}
                       {uploadResult.kind === 'video' && uploadResult.durationSec && (
                         <p className="text-xs">Dauer: {uploadResult.durationSec} Sekunden</p>
@@ -541,7 +542,7 @@ export default function Home() {
                   )}
 
                   {scriptResult && (
-                    <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Skript verarbeitet:</p>
                       <p className="text-xs">Transkript: {scriptResult.transcript?.substring(0, 100)}...</p>
                       {scriptResult.subtitles && <p className="text-xs">Untertitel generiert.</p>}
@@ -595,7 +596,7 @@ export default function Home() {
                   </div>
 
                   {voiceSpec && (
-                    <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Stimme ausgewählt:</p>
                       <p className="text-xs">ID: {voiceSpec.id}</p>
                       <p className="text-xs">Geklont: {voiceSpec.cloned ? 'Ja' : 'Nein'}</p>
@@ -668,7 +669,7 @@ export default function Home() {
                   )}
 
                   {styleSpec && (
-                    <div className="mt-2 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-2 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Stil ausgewählt:</p>
                       <p className="text-xs">Look: {styleSpec.look}</p>
                       <p className="text-xs">Hintergrund: {styleSpec.background}</p>
@@ -689,7 +690,7 @@ export default function Home() {
                       onCheckedChange={(checked) => setWatermark(!!checked)}
                     />
                     <Label htmlFor="watermark">
-                      "KI-generiert"-Wasserzeichen hinzufügen
+                      &quot;KI-generiert&quot;-Wasserzeichen hinzufügen
                     </Label>
                   </div>
                   <Button onClick={handleStartRender} disabled={isRendering || !uploadResult || !scriptResult || !voiceSpec || !styleSpec}>
@@ -705,7 +706,7 @@ export default function Home() {
                   )}
 
                   {renderResult && (
-                    <div className="mt-4 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-4 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Rendering abgeschlossen:</p>
                       <p className="text-xs">Render-ID: {renderResult.renderId}</p>
                       <p className="text-xs">Vorschau-URL: <a href={renderResult.previewUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{renderResult.previewUrl}</a></p>
@@ -746,7 +747,7 @@ export default function Home() {
                   </Button>
 
                   {exportResult && (
-                    <div className="mt-4 p-3 border rounded-md bg-muted/50">
+                    <div className="mt-4 p-3 border border-amber-400/40 rounded-md bg-amber-500/10">
                       <p className="text-sm font-medium">Export abgeschlossen:</p>
                       <p className="text-xs">Video-URL: <a href={exportResult.videoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{exportResult.videoUrl}</a></p>
                       {exportResult.subtitlesUrl && <p className="text-xs">Untertitel-URL: <a href={exportResult.subtitlesUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{exportResult.subtitlesUrl}</a></p>}

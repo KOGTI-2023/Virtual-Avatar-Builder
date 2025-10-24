@@ -3,9 +3,15 @@ import { RenderService } from '@/services/renderService';
 
 const renderService = new RenderService();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+type RenderProgressContext = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export async function GET(_request: Request, context: RenderProgressContext) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const progress = await renderService.getRenderProgress(id);
     return NextResponse.json(progress);
   } catch (error: any) {
