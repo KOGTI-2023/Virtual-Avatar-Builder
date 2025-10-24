@@ -1,183 +1,93 @@
-# Virtual Avatar Builder - Customized Dyad Template
+# 🧠 Virtual Avatar Builder
 
-This repository provides a robust boilerplate for building and deploying Next.js applications fully containerized with Docker, leveraging GitHub Container Registry (GHCR) for image hosting, and using a **pure JavaScript JSON database (`lowdb`)** as the backend. It also includes configuration for Next.js API proxying to handle external API integrations and CORS issues seamlessly.
+The Virtual Avatar Builder is a multi-step Next.js application that helps you create talking avatars from your own assets. The workflow guides you from asset collection through script and voice design to rendering and export. All project and pipeline data is stored locally via a JSON database (`lowdb`) and dedicated media folders so the entire process runs without external services by default.
 
-## ✨ Features
+## 🚀 Key Features
 
-- **Next.js**: A powerful React framework for building full-stack web applications.
-  
-- **Docker & Docker Compose**: Containerize your application for consistent environments across development, testing, and production. Run your entire stack locally with a single command.
-  
-- **GitHub Container Registry (GHCR)**: Automate your Docker image builds and push them to GHCR using GitHub Actions, providing a secure and integrated package registry.
-  
-- **JSON Database (`lowdb`)**: A lightweight, file-based JSON database that runs entirely in JavaScript. This simplifies database setup by eliminating native dependency issues and manual migration commands.
-  
-- **Next.js API Proxying (Rewrites)**: Built-in configuration to proxy requests to external APIs from your Next.js backend, helping to bypass client-side CORS restrictions.
-  
-- **Dyad-ready**: Optimized for deployment on the Dyad platform, leveraging your GHCR-hosted Docker image.
-  
-- **Virtueller Avatar-Ersteller**: Eine Multi-Step-Anwendung zur Erstellung sprechender Avatare.
+- Guided six-step experience (Upload → Script → Voice → Style → Render → Export)
+- Project management with automatic persistence for every step
+- Support for text or audio scripts plus optional voice cloning with explicit consent tokens
+- Style management with configurable looks, backgrounds, and watermarks
+- Rendering and export endpoints for MP4 video, PNG image sequences, and subtitle tracks
+- Privacy-first approach: all files stay on your machine unless you opt into external integrations
 
-## 🚀 Getting Started
-
-To use this template, follow these steps:
-
-### Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Git**: For version control.
-  
-- **Node.js**: (v18 or higher recommended) and npm or Yarn.
-  
-- **Docker & Docker Compose**: For building and running containers.
-  
-- **GitHub Account**: For using GHCR and GitHub Actions.
-  
-
-### 1. Create Your Project from This Template
-
-1. **Use This Template**: On GitHub, navigate to the template repository and click the green "Use this template" button (or "Use this template" -> "Create a new repository").
-  
-2. **Clone Your New Repository**:
-  
-  ```
-  git clone https://github.com/your-username/your-new-repo-name.gitcd your-new-repo-name
-  ```
-  
-
-### 2. Environment Setup
-
-Copy the example environment variables file:
-
+## 🗂️ Project Structure
 ```
-cp .env.example .env
+.
+├── src/app/page.tsx             # Multi-step avatar builder UI
+├── src/app/api/*                # API routes for upload, script, voice, render, export, etc.
+├── src/lib/database.ts          # lowdb initialization (JSON database at ./data/db.json)
+├── public/uploads               # Uploaded assets
+├── public/audio                 # Script and voice audio files
+├── public/renders               # Intermediate render artifacts
+├── public/exports               # Final exported files
+└── docker-compose.yml           # Optional container orchestration
 ```
 
-Now, open the newly created `.env` file and configure your settings:
+## 🧰 Requirements
 
-- `DATABASE_DIR`: Optional. If set, this defines the directory where your `db.json` file will be stored (default is `./data`).
-  
-- `EXTERNAL_API_URL_SERVICE1`, `EXTERNAL_API_URL_SERVICE2`, `WEATHER_API_URL`, `EXTERNAL_STT_API_URL`: These environment variables are used for external API proxying. **Set these to the actual base URLs of the external APIs you intend to proxy.** If a variable is left blank or omitted, the corresponding proxy rule will not be active.
-  
-  - **Note to AI/Users**: For any *new* external APIs you wish to integrate beyond these examples, you will need to **add a new environment variable** (e.g., `MY_NEW_API_URL`) to your `.env` file and configure a corresponding rewrite rule in `next.config.ts`.
+- Git
+- Node.js ≥ 18 (with npm or pnpm)
+- Optional: Docker and Docker Compose for containerized deployments
 
-## 💾 Database Setup (JSON Database with `lowdb`)
+## ⚡ Quick Start
 
-This template uses a **JSON file (`db.json`)** for its database, managed by the **`lowdb`** library. The `db.json` file and its initial structure are automatically created with default empty data (`{ examples: [], projects: [] }`) when the application first starts.
+Follow these steps to spin up the development environment.
 
-1. **Install Dependencies**:
-  
-  ```
-  npm install # or yarn install
-  ```
-  
-2. **Schema Definition & Persistence**:
-  The database structure (e.g., the `examples` array and `projects` array) is defined and initialized within `src/lib/database.ts` and `src/types/avatar-builder.d.ts`. All changes to the database (adding, updating, deleting data) are automatically persisted to the `db.json` file by `lowdb`'s adapter whenever you call `db.write()` after modifying `db.data`.
-  
-  - **Note to AI/Users**: If you need to store new types of data, you should **update the `DbSchema` interface** in `src/types/avatar-builder.d.ts` and ensure the default data in the `Low` constructor is initialized with empty arrays/objects for new collections in `src/lib/database.ts`.
+### 🪄 Step 1 · Clone the repository
+```bash
+git clone https://github.com/KOGTI-2023/Virtual-Avatar-Builder.git
+cd Virtual-Avatar-Builder
+```
 
-## 🐳 Local Development with Docker Compose
+### 📦 Step 2 · Install dependencies
+```bash
+pnpm install                # or: npm install
+```
 
-This template includes a `docker-compose.yml` file to quickly spin up your application in a Dockerized environment locally.
+### 🖥️ Step 3 · Launch the development server
+```bash
+pnpm dev                    # or: npm run dev
+```
 
-1. **Build Your Docker Image Locally (Optional but good for testing)**:
-  While GitHub Actions will build your image for GHCR, you can build it locally to ensure your `Dockerfile` works as expected:
-  
-  ```
-  docker build -t your-app-name:local .
-  ```
-  
-2. **Run with Docker Compose**:
-  Navigate to the root of your project and run:
-  
-  ```
-  docker compose up -d
-  ```
-  
-  This command:
-  
-  - Builds your Docker image if it hasn't been built or updated.
-    
-  - Starts your Next.js application in a Docker container.
-    
-  - Maps port `3000` from the container to `3000` on your host machine. You can change `3000:3000` in `docker-compose.yml` to, for example, `8080:3000` to access it on port 8080.
-    
-  - Creates Docker volumes (`dyad_db_data`, `./public/uploads`, `./public/audio`, `./public/renders`, `./public/exports`) to persist your JSON database file (`db.json`) and uploaded/generated assets, ensuring your data isn't lost when the container is stopped or removed.
-    
-3. **Access Your Application**:
-  Once the containers are running, open your web browser and navigate to: `http://localhost:3000`
-  
-4. **Test API Endpoints**:
-  The template includes API endpoints for the Avatar Builder (e.g., `/api/projects`, `/api/ingest/upload`, `/api/render/start`) that interact with the JSON database and mock services. You can use tools like Postman or `curl` to test these endpoints. If you've configured `EXTERNAL_STT_API_URL`, you can also try to test proxied endpoints like `/api/stt/transcribe` (assuming the service you configured has those endpoints).
-  
-5. **Stop the Application**:
-  To stop and remove the containers and the associated volumes (if you want to reset the database and uploaded files), run:
-  
-  ```
-  docker compose down -v
-  ```
-  
-  To stop only the containers without removing the volumes, use `docker compose down`.
-  
+### 🌐 Step 4 · Open the application
+Navigate to [http://localhost:3000](http://localhost:3000).
 
-## ☁️ GitHub Container Registry (GHCR) Integration
+On the first run, `lowdb` creates `./data/db.json` automatically. Media directories inside `public/` already exist and are ready to use.
 
-This template is configured to automatically build and push your Docker image to GHCR.
+## ⚙️ Configuration
 
-- **Workflow**: The `.github/workflows/main.yml` file defines a GitHub Actions workflow that triggers on:
-  
-  - Pushes to the `main` branch.
-    
-  - Creation of new tags (e.g., `v1.0.0`).
-    
-- **Image Location**: Your Docker image will be pushed to `ghcr.io/your-github-username/your-repo-name:latest` (or `ghcr.io/your-github-username/your-repo-name:v1.0.0` for tags). You can find your images under the "Packages" section of your GitHub repository.
-  
-- **Authentication**: The workflow uses the `GITHUB_TOKEN` to authenticate and push images securely to GHCR.
-  
+- **Database path**: Set `DATABASE_DIR` (e.g., in `.env` or your Docker environment) to change where `db.json` is stored. The default is `./data` in the project root.
+- **External APIs**: Optional proxies to STT/TTS or other services are wired through environment variables consumed in `next.config.ts` (for example `EXTERNAL_STT_API_URL`). If no variable is set, the proxy remains disabled.
+- **Voice cloning consent**: Voice cloning requires an explicit opt-in with a consent token handled by the `VoiceCloningConsentDialog`.
 
-## ↔️ Next.js API Proxying (Rewrites)
+## 🔌 API & Upload Endpoints
 
-The `next.config.ts` file is configured to allow proxying requests from your Next.js application to external APIs. This is particularly useful for bypassing Cross-Origin Resource Sharing (CORS) issues when making API calls from the browser.
+API routes live under `src/app/api/` and can be exercised locally with tools such as `curl` or Postman:
+- `POST /api/ingest/upload` – Upload assets (video or image)
+- `POST /api/script/text` and `POST /api/script/audio` – Create or transcribe scripts
+- `GET /api/voice/prebuilt` and `POST /api/voice/clone` – Manage voices
+- `GET /api/style/available` – Get available avatar styles
+- `POST /api/render/start` – Kick off rendering with progress updates
+- `POST /api/export/start` – Trigger exports (MP4, PNG sequence, subtitles)
+- `GET/POST /api/projects` – Create, update, and retrieve projects
 
-- **Conditional Configuration**: The `async rewrites()` function in `next.config.ts` will **only create a proxy rule if the corresponding environment variable (e.g., `EXTERNAL_STT_API_URL`) is explicitly set and not blank.** This means your application will start without errors even if you don't need all proxy rules immediately.
-  
-- **Usage Example**: If you set `EXTERNAL_STT_API_URL=https://api.example.com/stt`, a request from your frontend to `/api/stt/transcribe` will be proxied by your Next.js backend to `https://api.example.com/stt/transcribe`. If `EXTERNAL_STT_API_URL` is blank, that rule will simply not be active.
-  
-- **Customization**: To integrate your specific external APIs, **set the corresponding environment variables in your `.env` file**. You can also add more rewrite rules to `next.config.ts` for additional APIs.
-  
-  - **Note to AI/Users**: When integrating with a *new* external API, the AI should **add a new rewrite rule** to `next.config.ts` for that specific API and guide the user to set the corresponding environment variable.
+Each endpoint persists its status in the JSON database and writes files to the matching directories under `public/`.
 
-## 🔒 Datenschutz- und Sicherheitsprinzipien
+## 🐳 Docker Compose
 
-Der Virtuelle Avatar-Ersteller wurde mit einem "Privacy-First"-Ansatz entwickelt:
+Use `docker-compose.yml` for a containerized setup. Before launching, adjust the referenced image to match your registry or build pipeline (for example, a local build or a custom GHCR image).
 
-- **Lokale Verarbeitung**: Standardmäßig werden alle sensiblen Daten (hochgeladene Assets, Skripte, Stimmen) lokal auf Ihrem System verarbeitet und gespeichert. Es werden keine externen Dienste ohne Ihre ausdrückliche Zustimmung genutzt.
-- **Explizites Opt-in**: Für die Nutzung externer Dienste (z.B. für fortschrittlichere STT- oder TTS-Modelle) ist immer eine klare und ausdrückliche Zustimmung des Benutzers erforderlich.
-- **Datenminimierung**: Es werden nur die für die Funktionalität notwendigen Daten gesammelt und gespeichert. Speicherorte werden offengelegt.
-- **Telemetrie**: Telemetrie ist standardmäßig deaktiviert.
-- **Stimmenklonen**:
-    - **Zustimmung erforderlich**: Das Klonen von Stimmen erfordert eine ausdrückliche Zustimmung des Benutzers, die durch einen eindeutigen Token bestätigt wird.
-    - **Kein Klonen von Prominentenstimmen**: Das Klonen von Stimmen von Prominenten oder anderen Personen ohne deren ausdrückliche Zustimmung ist strengstens untersagt und wird, soweit technisch möglich, blockiert.
-    - **Wasserzeichen**: Exportierte Videos können optional ein "KI-generiert"-Wasserzeichen enthalten, um die Herkunft zu kennzeichnen.
+```bash
+docker compose up -d
+```
 
-## 🛠️ Customization
+Named volumes keep the database and media assets persistent (`./data`, `./public/uploads`, `./public/audio`, `./public/renders`, `./public/exports`).
 
-Feel free to customize this template to fit your specific needs:
+## 🧭 Additional Resources
 
-- **Database Schema**: Modify `src/lib/database.ts` and the `DbSchema` interface in `src/types/avatar-builder.d.ts` to define the structure of your JSON data. Remember to call `db.write()` after any data modifications.
-  
-- **Next.js API Routes**: Extend the existing API routes or create new ones in `src/app/api/` to interact with your `lowdb` database and services.
-  
-- **Frontend**: Build out your Next.js UI components in `src/app/page.tsx` or other components.
-  
-- **Docker Configuration**: Adjust the `Dockerfile` for specific dependencies or optimizations.
-  
-- **Docker Compose**: Add more services or configure volumes/networks as needed in `docker-compose.yml`.
-  
-- **GitHub Actions**: Customize the CI/CD workflow (`.github/workflows/main.yml`) for different branching strategies or testing.
-  
+- The builder relies on the shadcn/ui component kit (see `src/components/ui/*`).
+- Type definitions for projects, scripts, voices, and more live in `src/types/avatar-builder.d.ts`.
+- For production scenarios, harden the deployment with a reverse proxy, HTTPS, and tightened upload limits.
 
-## ❓ Questions or Issues
-
-If you have questions or encounter issues, please refer to the documentation for Next.js, Docker, `lowdb`, GitHub Actions, and Dyad. If you believe there's an issue with the template itself, consider opening an issue in the template repository.
+If you have questions or run into issues, explore the API route implementations and the React components driving each step. Contributions and feature ideas are welcome through issues or pull requests.
